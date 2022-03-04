@@ -41,7 +41,7 @@ void set_dtc(ControllerStruct *controller){
 
 void analog_sample (ControllerStruct *controller){
 	/* Sampe ADCs */
-	/* Handle phase order swapping so that voltage/current/torque match encoder direction */
+	/* 处理相序交换，以便电压/电流/扭矩匹配编码器方向 */
 	if(!PHASE_ORDER){
 		controller->adc_a_raw = HAL_ADC_GetValue(&ADC_CH_IA);
 		controller->adc_b_raw = HAL_ADC_GetValue(&ADC_CH_IB);
@@ -53,18 +53,17 @@ void analog_sample (ControllerStruct *controller){
 		//adc_ch_ic = ADC_CH_IB;
 	}
 
-
 	HAL_ADC_Start(&ADC_CH_MAIN);
 	HAL_ADC_PollForConversion(&ADC_CH_MAIN, HAL_MAX_DELAY);
 
 	controller->adc_vbus_raw = HAL_ADC_GetValue(&ADC_CH_VBUS);
 	controller->v_bus = (float)controller->adc_vbus_raw*V_SCALE;
 
-    controller->i_a = I_SCALE*(float)(controller->adc_a_raw - controller->adc_a_offset);    // Calculate phase currents from ADC readings
-    controller->i_b = I_SCALE*(float)(controller->adc_b_raw - controller->adc_b_offset);
-    controller->i_c = -controller->i_a - controller->i_b;
-
+    controller->i_a = I_SCALE*(float)(controller->adc_a_raw - controller->adc_a_offset);    //根据ADC读数计算相位电流
+    controller->i_b = I_SCALE*(float)(controller->adc_b_raw - controller->adc_b_offset);    
+    controller->i_c = -controller->i_a - controller->i_b;                                   //基尔霍夫定律 ia+ib+ic=0;
 }
+
 
 void abc( float theta, float d, float q, float *a, float *b, float *c){
     /* Inverse DQ0 Transform

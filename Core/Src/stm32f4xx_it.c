@@ -253,17 +253,11 @@ void TIM1_UP_TIM10_IRQHandler(void)
   /* USER CODE BEGIN TIM1_UP_TIM10_IRQn 0 */
 	//HAL_GPIO_WritePin(LED, GPIO_PIN_SET );	// Useful for timing
 
-	/* Sample ADCs */
-	analog_sample(&controller);
+	analog_sample(&controller);         //AD采样
+	ps_sample(&comm_encoder, DT);       //位置传感器采样
+	run_fsm(&state);                    //运行有限状态机
+	controller.loop_count++;            //增量循环计数
 
-	/* Sample position sensor */
-	ps_sample(&comm_encoder, DT);
-
-	/* Run Finite State Machine */
-	run_fsm(&state);
-
-	/* increment loop count */
-	controller.loop_count++;
 	//HAL_GPIO_WritePin(LED, GPIO_PIN_RESET );
 
   /* USER CODE END TIM1_UP_TIM10_IRQn 0 */

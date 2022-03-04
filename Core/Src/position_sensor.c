@@ -23,28 +23,27 @@ void ps_warmup(EncoderStruct * encoder, int n){
 }
 
 void ps_sample(EncoderStruct * encoder, float dt){
-	/* updates EncoderStruct encoder with the latest sample
-	 * after elapsed time dt */
+	/*使用最新样本更新EncoderStruct编码器*/	
 
-	/* Shift around previous samples */
+	/* 更新样本数据 */
 	encoder->old_angle = encoder->angle_singleturn;
-	for(int i = N_POS_SAMPLES-1; i>0; i--){encoder->angle_multiturn[i] = encoder->angle_multiturn[i-1];}
-	//memmove(&encoder->angle_multiturn[1], &encoder->angle_multiturn[0], (N_POS_SAMPLES-1)*sizeof(float)); // this is much slower for some reason
+	for(int i = N_POS_SAMPLES-1; i>0; i--){
+		encoder->angle_multiturn[i] = encoder->angle_multiturn[i-1];
+	}
 
 	/* SPI read/write */
 	encoder->spi_tx_word = ENC_READ_WORD;
 	HAL_GPIO_WritePin(ENC_CS, GPIO_PIN_RESET ); 	// CS low
 	HAL_SPI_TransmitReceive(&ENC_SPI, (uint8_t*)encoder->spi_tx_buff, (uint8_t *)encoder->spi_rx_buff, 1, 100);
-	while( ENC_SPI.State == HAL_SPI_STATE_BUSY );  					// wait for transmission complete
-	HAL_GPIO_WritePin(ENC_CS, GPIO_PIN_SET ); 	// CS high
+	while( ENC_SPI.State == HAL_SPI_STATE_BUSY );  					// 等待传输完成
+	HAL_GPIO_WritePin(ENC_CS, GPIO_PIN_SET ); 		// CS high
 	encoder->raw = encoder ->spi_rx_word;
 
-	/* Linearization */
+	/* 线性化 */
 	int off_1 = encoder->offset_lut[(encoder->raw)>>9];				// lookup table lower entry
 	int off_2 = encoder->offset_lut[((encoder->raw>>9)+1)%128];		// lookup table higher entry
 	int off_interp = off_1 + ((off_2 - off_1)*(encoder->raw - ((encoder->raw>>9)<<9))>>9);     // Interpolate between lookup table entries
 	encoder->count = encoder->raw + off_interp;
-
 
 	/* Real angles in radians */
 	encoder->angle_singleturn = ((float)(encoder->count-M_ZERO))/((float)ENC_CPR);

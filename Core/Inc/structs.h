@@ -24,17 +24,17 @@
 #include "calibration.h"
 #include "can.h"
 
-typedef struct{
-    } GPIOStruct;
+// typedef struct{
+//     } GPIOStruct;
 
-typedef struct{
-    }COMStruct;
+// typedef struct{
+//     }COMStruct;
 
 
 /* Global Structs */
 extern ControllerStruct controller;
 extern ObserverStruct observer;
-extern COMStruct com;
+// extern COMStruct com;
 extern FSMStruct state;
 extern EncoderStruct comm_encoder;
 extern DRVStruct drv;

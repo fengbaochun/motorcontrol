@@ -40,13 +40,13 @@
 #define CAN_H			hcan1				// CAN handle
 
 /* Other hardware-related constants */
-#define I_SCALE 			0.02014160156f  // Amps per A/D Count
-#define V_SCALE 			0.012890625f    // Bus volts per A/D Count
-#define DTC_MAX 			0.94f          	// Max duty cycle
-#define DTC_MIN 			0.0f          	// Min duty cycle
-#define DTC_COMP 			0.000f          // deadtime compensation (100 ns / 25 us)
-#define DT					.000025f		// Loop period
-#define EN_ENC_LINEARIZATION 1				// Enable/disable encoder linearization
+#define I_SCALE 			0.02014160156f  // 每A/D计数的安培数                Amps per A/D Count
+#define V_SCALE 			0.012890625f    // 每个A/D计数的总线电压            Bus volts per A/D Count
+#define DTC_MAX 			0.94f          	// 最大占空比                       Max duty cycle
+#define DTC_MIN 			0.0f          	// 最小占空比                       Min duty cycle
+#define DTC_COMP 			0.000f          // 死区时间补偿                     deadtime compensation (100 ns / 25 us)
+#define DT					.000025f		// 循环周期 40k                     Loop period
+#define EN_ENC_LINEARIZATION 1				// 启用/禁用编码器线性化            Enable/disable encoder linearization
 
 
 /* Current controller */

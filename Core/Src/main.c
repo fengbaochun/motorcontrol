@@ -83,7 +83,7 @@ int count = 0;
 
 ControllerStruct controller;
 ObserverStruct observer;
-COMStruct com;
+// COMStruct com;
 FSMStruct state;
 EncoderStruct comm_encoder;
 DRVStruct drv;
