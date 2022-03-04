@@ -12,7 +12,7 @@
 #include "user_config.h"
 
 void ps_warmup(EncoderStruct * encoder, int n){
-	/* Hall position sensors noisy on startup.  Take a bunch of samples to clear this data */
+	/*霍尔位置传感器在启动时发出噪音。取一堆样本来清除这些数据 */
 	for(int i = 0; i<n; i++){
 		encoder->spi_tx_word = 0x0000;
 		HAL_GPIO_WritePin(ENC_CS, GPIO_PIN_RESET ); 	// CS low

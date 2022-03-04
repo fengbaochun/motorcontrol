@@ -158,8 +158,7 @@ void reset_foc(ControllerStruct *controller){
     controller->v_d = 0;
     controller->fw_int = 0;
     controller->otw_flag = 0;
-
-    }
+}
 
 void reset_observer(ObserverStruct *observer){
 /*

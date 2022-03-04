@@ -29,12 +29,12 @@ typedef struct{
 	float theta_start;								// 校准起始角度					cal start angle
 	int ezero;
 	uint8_t phase_order;							// 相序正确（0）或交换（1）		phase order correct (0) or swapped (1)
-	uint8_t done_ordering, done_cal, done_rl;		// flags for different cals finished
-	uint16_t sample_count;							// keep track of how many samples taken
+	uint8_t done_ordering, done_cal, done_rl;		// 不同CAL的标志已完成			flags for different cals finished
+	uint16_t sample_count;							// 记录采集的样本数量			keep track of how many samples taken
 	float next_sample_time;							// time to take next sample
 	int error_arr[N_CAL];
 	int lut_arr[N_LUT];
-	EncoderStruct cal_position;						// Position reference used for calibration
+	EncoderStruct cal_position;						// 用于校准的位置参考			Position reference used for calibration
 
 } CalStruct;
 

@@ -27,12 +27,12 @@ typedef struct{
     float k_d, k_q, ki_d, ki_q, ki_fw, alpha;               // Current loop gains, current reference filter coefficient
     float d_int, q_int;                                     // Current error integrals
     int adc_a_offset, adc_b_offset, adc_c_offset, adc_vbus_offset; 		// ADC offsets
-    float i_d_des, i_q_des, i_d_des_filt, i_q_des_filt;     // Current references
+    float i_d_des, i_q_des, i_d_des_filt, i_q_des_filt;     // 电流参考值               Current references
     int loop_count;                                         // Degubbing counter
-    int timeout;                                            // Watchdog counter
+    int timeout;                                            // 看门狗超时计数           Watchdog counter
     int mode;
-    int ovp_flag;                                           // Over-voltage flag
-    int oc_flag;											// Over-current flag
+    int ovp_flag;                                           // 过压标志                 Over-voltage flag
+    int oc_flag;											// 过流标志                 Over-current flag
     int phase_order;
     union{
     	float commands[5];									// Making this easier to pass around without including foc.h everywhere

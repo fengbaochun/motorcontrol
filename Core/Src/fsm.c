@@ -19,29 +19,27 @@
 #include "drv8323.h"
 
  void run_fsm(FSMStruct * fsmstate){
-	 /* run_fsm is run every commutation interrupt cycle */
+	 /* run_fsm在每个换向中断周期运行*/
 
-	 /* state transition management */
+	 /* 状态过渡管理 */
 	 if(fsmstate->next_state != fsmstate->state){
-		 fsm_exit_state(fsmstate);		// safely exit the old state
-		 if(fsmstate->ready){			// if the previous state is ready, enter the new state
+		 fsm_exit_state(fsmstate);		// 安全退出旧状态	
+		 if(fsmstate->ready){			// 如果上一个状态已就绪，请输入新状态
 			 fsmstate->state = fsmstate->next_state;
 			 fsm_enter_state(fsmstate);
 		 }
 	 }
 
 	 switch(fsmstate->state){
-		 case MENU_MODE:
+		 case MENU_MODE:								//菜单模式
 			 break;
 
-		 case CALIBRATION_MODE:
-			 if(!comm_encoder_cal.done_ordering){
+		 case CALIBRATION_MODE:							//标定模式
+			 if(!comm_encoder_cal.done_ordering){		//相序检查
 				 order_phases(&comm_encoder, &controller, &comm_encoder_cal, controller.loop_count);
-			 }
-			 else if(!comm_encoder_cal.done_cal){
+			 }else if(!comm_encoder_cal.done_cal){		//标定编码器
 				 calibrate_encoder(&comm_encoder, &controller, &comm_encoder_cal, controller.loop_count);
-			 }
-			 else{
+			 }else{
 				 /* Exit calibration mode when done */
 				 //for(int i = 0; i<128*PPAIRS; i++){printf("%d\r\n", error_array[i]);}
 				 E_ZERO = comm_encoder_cal.ezero;

@@ -15,8 +15,7 @@
 #include "math_ops.h"
 
 void order_phases(EncoderStruct *encoder, ControllerStruct *controller, CalStruct * cal, int loop_count){
-	/* Checks phase order, to ensure that positive Q current produces
-	   torque in the positive direction wrt the position sensor */
+	/*检查相序，以确保产生正Q电流位置传感器正方向上的扭矩*/
 	PHASE_ORDER = 0;
 
 	if(!cal->started){
@@ -27,7 +26,7 @@ void order_phases(EncoderStruct *encoder, ControllerStruct *controller, CalStruc
 	cal->time = (float)(loop_count - cal->start_count)*DT;
 
     if(cal->time < T1){
-        // Set voltage angle to zero, wait for rotor position to settle
+        // 将电压角设置为零，等待转子位置稳定下来
         cal->theta_ref = 0;//W_CAL*cal->time;
         cal->cal_position.elec_angle = cal->theta_ref;
         cal->cal_position.elec_velocity = 0;
@@ -39,7 +38,7 @@ void order_phases(EncoderStruct *encoder, ControllerStruct *controller, CalStruc
     }
 
     else if(cal->time < T1+2.0f*PI_F/W_CAL){
-    	// rotate voltage vector through one electrical cycle
+    	// 将电压矢量旋转一个电气循环
     	cal->theta_ref = W_CAL*(cal->time-T1);
     	cal->cal_position.elec_angle = cal->theta_ref;
 		commutate(controller, &cal->cal_position);
@@ -64,24 +63,23 @@ void order_phases(EncoderStruct *encoder, ControllerStruct *controller, CalStruc
     PHASE_ORDER = cal->phase_order;
     PPAIRS = (float)cal->ppairs;
     cal->started = 0;
-    cal->done_ordering = 1;	// Finished checking phase order
+    cal->done_ordering = 1;	// 完成了相序检查
 }
 
 void calibrate_encoder(EncoderStruct *encoder, ControllerStruct *controller, CalStruct * cal, int loop_count){
-	/* Calibrates e-zero and encoder nonliearity */
-
+	/* 校准零点和编码器非线性*/
 	if(!cal->started){
-			printf("Starting offset cal and linearization\r\n");
+			printf("Starting offset cal and linearization\r\n");		//启动偏移校准和线性化
 			cal->started = 1;
 			cal->start_count = loop_count;
 			cal->next_sample_time = T1;
 			cal->sample_count = 0;
 		}
 
-	cal->time = (float)(loop_count - cal->start_count)*DT;
+	cal->time = (float)(loop_count - cal->start_count)*DT;				//计算采样时间
 
     if(cal->time < T1){
-        // Set voltage angle to zero, wait for rotor position to settle
+        // 将电压角设置为零，等待转子位置稳定下来	
         cal->theta_ref = 0;//W_CAL*cal->time;
         cal->cal_position.elec_angle = cal->theta_ref;
         controller->i_d_des = I_CAL;
@@ -91,9 +89,8 @@ void calibrate_encoder(EncoderStruct *encoder, ControllerStruct *controller, Cal
     	cal->theta_start = encoder->angle_multiturn[0];
     	cal->next_sample_time = cal->time;
     	return;
-    }
-    else if (cal->time < T1+2.0f*PI_F*PPAIRS/W_CAL){
-    	// rotate voltage vector through one mechanical rotation in the positive direction
+    }else if (cal->time < T1+2.0f*PI_F*PPAIRS/W_CAL){
+    	// 通过正向机械旋转旋转电压矢量
 		cal->theta_ref += W_CAL*DT;//(cal->time-T1);
 		cal->cal_position.elec_angle = cal->theta_ref;
 		commutate(controller, &cal->cal_position);
@@ -112,8 +109,7 @@ void calibrate_encoder(EncoderStruct *encoder, ControllerStruct *controller, Cal
 
 		}
 		return;
-    }
-	else if (cal->time < T1+4.0f*PI_F*PPAIRS/W_CAL){
+    }else if (cal->time < T1+4.0f*PI_F*PPAIRS/W_CAL){
 		// rotate voltage vector through one mechanical rotation in the negative direction
 		cal->theta_ref -= W_CAL*DT;//(cal->time-T1);
 		controller->i_d_des = I_CAL;
