@@ -218,7 +218,7 @@ int main(void)
   HAL_Delay(1);
   drv_write_CSACR(drv, 0x0, 0x1, 0x0, CSA_GAIN_40, 0x0, 0x1, 0x1, 0x1, SEN_LVL_1_0);
   HAL_Delay(1);
-  zero_current(&controller);
+  zero_current(&controller);        //标定放大器基准电流
   HAL_Delay(1);
   drv_write_CSACR(drv, 0x0, 0x1, 0x0, CSA_GAIN_40, 0x1, 0x0, 0x0, 0x0, SEN_LVL_1_0);
   HAL_Delay(1);

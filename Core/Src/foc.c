@@ -58,7 +58,7 @@ void analog_sample (ControllerStruct *controller){
 
 	controller->adc_vbus_raw = HAL_ADC_GetValue(&ADC_CH_VBUS);
 	controller->v_bus = (float)controller->adc_vbus_raw*V_SCALE;
-
+    //实际电流减去 0点偏移值
     controller->i_a = I_SCALE*(float)(controller->adc_a_raw - controller->adc_a_offset);    //根据ADC读数计算相位电流
     controller->i_b = I_SCALE*(float)(controller->adc_b_raw - controller->adc_b_offset);    
     controller->i_c = -controller->i_a - controller->i_b;                                   //基尔霍夫定律 ia+ib+ic=0;
@@ -106,15 +106,14 @@ void svm(float v_max, float u, float v, float w, float *dtc_u, float *dtc_v, flo
     }
 
 void zero_current(ControllerStruct *controller){
-	/* Measure zero-current ADC offset */
-
+	/* 测量零电流ADC偏移 */       
     int adc_a_offset = 0;
     int adc_b_offset = 0;
     int n = 1000;
     controller->dtc_u = 0.f;
     controller->dtc_v = 0.f;
     controller->dtc_w = 0.f;
-    set_dtc(controller);
+    set_dtc(controller);                    
 
     for (int i = 0; i<n; i++){               // Average n samples
     	analog_sample(controller);
@@ -122,9 +121,9 @@ void zero_current(ControllerStruct *controller){
     	adc_b_offset += controller->adc_b_raw;
      }
     controller->adc_a_offset = adc_a_offset/n;
-    controller->adc_b_offset = adc_b_offset/n;
+    controller->adc_b_offset = adc_b_offset/n;      //测量三相ADC的电流偏移，（相对于基准1.65v的偏移）测量n 次取平均
 
-    }
+}
 
 void init_controller_params(ControllerStruct *controller){
 
