@@ -133,7 +133,7 @@ void calibrate_encoder(EncoderStruct *encoder, ControllerStruct *controller, Cal
 
     reset_foc(controller);
 
-    // Calculate average offset
+    // 计算平均偏移量
     int ezero_mean = 0;
 	for(int i = 0; i<((int)PPAIRS*SAMPLES_PER_PPAIR); i++){
 		ezero_mean += cal->error_arr[i];
@@ -141,7 +141,7 @@ void calibrate_encoder(EncoderStruct *encoder, ControllerStruct *controller, Cal
 	cal->ezero = ezero_mean/(SAMPLES_PER_PPAIR*PPAIRS);
 
 	// Moving average to filter out cogging ripple
-
+    // 移动平均 滤除 齿槽纹波
 	int window = SAMPLES_PER_PPAIR;
 	int lut_offset = (ENC_CPR-cal->error_arr[0])*N_LUT/ENC_CPR;
 	for(int i = 0; i<N_LUT; i++){

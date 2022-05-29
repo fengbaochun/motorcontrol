@@ -19,3 +19,4 @@ RTE
 /Debug/Core/Src
 /Debug
 /Release
+.vscode/settings.json
